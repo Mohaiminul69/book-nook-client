@@ -3,24 +3,20 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Menu, UserRound } from "lucide-react";
-import { Logo } from "@/components/logo";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { BrandWordmark, Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -38,97 +34,109 @@ function isActive(pathname, href) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-function NavLinkList({ links, pathname, vertical = false, onNavigate }) {
-  return (
-    <ul className={vertical ? "flex flex-col gap-1" : "flex items-center gap-1"}>
-      {links.map((link) => {
-        const active = isActive(pathname, link.href);
-        return (
-          <li key={link.href}>
-            <Link
-              href={link.href}
-              onClick={onNavigate}
-              aria-current={active ? "page" : undefined}
-              className={`block rounded-lg px-3.5 py-2.5 text-[15px] transition-colors ${
-                active
-                  ? "bg-secondary font-semibold text-secondary-foreground"
-                  : "font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
-  );
+function DesktopLinkList({ links, pathname }) {
+  return links.map((link) => {
+    const active = isActive(pathname, link.href);
+    return (
+      <Link
+        key={link.href}
+        href={link.href}
+        aria-current={active ? "page" : undefined}
+        className={`text-[15px] transition-colors hover:text-primary ${active ? "text-primary" : "text-foreground"}`}
+      >
+        {link.label}
+      </Link>
+    );
+  });
+}
+
+function DrawerLinkList({ links, pathname, onNavigate }) {
+  return links.map((link) => {
+    const active = isActive(pathname, link.href);
+    return (
+      <Link
+        key={link.href}
+        href={link.href}
+        onClick={onNavigate}
+        aria-current={active ? "page" : undefined}
+        className={`py-3 font-heading text-[26px] tracking-[-0.01em] ${active ? "text-cyan-700" : "text-foreground"}`}
+      >
+        {link.label}
+      </Link>
+    );
+  });
 }
 
 // usePathname must sit inside <Suspense> because cacheComponents is on
-function ActiveNavLinks(props) {
+function WithPathname({ render }) {
   const pathname = usePathname();
-  return <NavLinkList {...props} pathname={pathname} />;
+  return render(pathname);
 }
 
-function NavLinks(props) {
+function ActiveLinks({ render }) {
   return (
-    <Suspense fallback={<NavLinkList {...props} pathname={null} />}>
-      <ActiveNavLinks {...props} />
+    <Suspense fallback={render(null)}>
+      <WithPathname render={render} />
     </Suspense>
   );
 }
 
-function UserMenu({ user, onLogout }) {
-  const initials = user.name
-    ?.split(" ")
+function initialsOf(name = "") {
+  return name
+    .split(" ")
     .map((part) => part[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
+}
 
+function AccountMenu({ user, onLogout }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          aria-label="Open profile menu"
-          className="rounded-full ring-2 ring-highlight ring-offset-2 ring-offset-background"
+          aria-label="Account menu"
+          className="rounded-full shadow-[0_0_0_2px_var(--background),0_0_0_3px_var(--color-cyan-300)]"
         >
-          <Avatar className="size-10">
+          <Avatar className="size-[38px]">
             <AvatarImage src={user.image} alt={user.name} />
-            <AvatarFallback>{initials}</AvatarFallback>
+            <AvatarFallback className="bg-cyan-100 font-heading text-[15px] text-cyan-800">
+              {initialsOf(user.name)}
+            </AvatarFallback>
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-60">
-        <DropdownMenuLabel className="flex flex-col gap-0.5">
-          <span className="text-sm font-semibold text-foreground">{user.name}</span>
-          <span className="text-xs font-normal text-muted-foreground">{user.email}</span>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/profile">
-            <UserRound /> My Profile
-          </Link>
+      <DropdownMenuContent
+        align="end"
+        sideOffset={12}
+        className="w-[248px] rounded-md bg-card p-2 shadow-md ring-0"
+      >
+        <div className="flex flex-col gap-0.5 px-3 pt-2.5 pb-3">
+          <span className="font-heading text-[17px]">{user.name}</span>
+          <span className="text-[13px] text-muted-foreground">{user.email}</span>
+        </div>
+        <DropdownMenuItem asChild className="min-h-10 rounded-md px-3 font-heading text-sm font-semibold">
+          <Link href="/profile">My Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem variant="destructive" onSelect={onLogout}>
-          <LogOut /> Logout
+        <DropdownMenuItem
+          onSelect={onLogout}
+          className="min-h-10 rounded-md px-3 font-heading text-sm font-semibold text-magenta-700 focus:text-magenta-700"
+        >
+          Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 
-function AuthButtons({ vertical = false }) {
+function HamburgerIcon() {
   return (
-    <div className={vertical ? "flex flex-col gap-2" : "flex items-center gap-2"}>
-      <Button asChild variant="outline" size="lg" className="h-10 px-4 text-[15px]">
-        <Link href="/login">Login</Link>
-      </Button>
-      <Button asChild size="lg" className="h-10 px-4 text-[15px]">
-        <Link href="/register">Register</Link>
-      </Button>
-    </div>
+    <span aria-hidden="true" className="flex flex-col gap-1">
+      <span className="h-[1.5px] w-4 bg-current" />
+      <span className="h-[1.5px] w-4 bg-current" />
+      <span className="h-[1.5px] w-4 bg-current" />
+    </span>
   );
 }
 
@@ -138,47 +146,98 @@ export function Navbar() {
   const user = null;
   const onLogout = () => {};
 
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
   const links = NAV_LINKS.filter((link) => user || !link.private);
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-card/90 backdrop-blur">
-      <nav className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Logo />
+    <header className="page-container relative z-20">
+      <nav className="flex items-center gap-7 py-3.5 lg:py-[22px]">
+        <Logo className="mr-auto" />
 
-        <div className="hidden lg:block">
-          <NavLinks links={links} />
+        <div className="hidden items-center gap-7 lg:flex">
+          <ActiveLinks render={(pathname) => <DesktopLinkList links={links} pathname={pathname} />} />
         </div>
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          {user ? (
-            <UserMenu user={user} onLogout={onLogout} />
-          ) : (
-            <div className="hidden sm:block">
-              <AuthButtons />
-            </div>
+        <div className="flex items-center gap-2.5">
+          {user && <AccountMenu user={user} onLogout={onLogout} />}
+
+          {!user && (
+            <>
+              <div className="hidden items-center gap-2.5 lg:flex">
+                <Button asChild variant="ghost" className="px-[5px]">
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/register">Register</Link>
+                </Button>
+              </div>
+              <Button asChild className="lg:hidden">
+                <Link href="/login">Login</Link>
+              </Button>
+            </>
           )}
 
-          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon-lg" className="lg:hidden" aria-label="Open menu">
-                <Menu />
+              <Button variant="secondary" size="icon-lg" className="lg:hidden" aria-label="Open menu">
+                <HamburgerIcon />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-72 gap-0">
-              <SheetHeader>
-                <SheetTitle className="font-heading text-xl text-primary">BookNook</SheetTitle>
-                <SheetDescription>Browse, borrow and share books.</SheetDescription>
-              </SheetHeader>
-              <div className="flex flex-col gap-6 px-4">
-                <NavLinks links={links} vertical onNavigate={() => setMobileOpen(false)} />
-                {!user && <AuthButtons vertical />}
+            <SheetContent
+              side="right"
+              showCloseButton={false}
+              className="w-[82%] gap-1.5 border-0 bg-background p-6 sm:max-w-none"
+            >
+              <div className="flex items-center justify-between pb-5">
+                <SheetTitle asChild>
+                  <BrandWordmark className="text-foreground" />
+                </SheetTitle>
+                <SheetClose asChild>
+                  <Button variant="ghost" size="icon-lg" className="text-xl font-normal text-foreground" aria-label="Close menu">
+                    ×
+                  </Button>
+                </SheetClose>
+              </div>
+              <SheetDescription className="sr-only">Site navigation</SheetDescription>
+
+              <ActiveLinks
+                render={(pathname) => (
+                  <DrawerLinkList links={links} pathname={pathname} onNavigate={closeMenu} />
+                )}
+              />
+
+              <div className="mt-auto flex flex-col gap-2.5">
+                {user ? (
+                  <>
+                    <span className="text-sm text-foreground/75">Signed in as {user.name}</span>
+                    <Button
+                      variant="secondary"
+                      className="min-h-11"
+                      onClick={() => {
+                        closeMenu();
+                        onLogout();
+                      }}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button asChild className="min-h-11">
+                      <Link href="/login" onClick={closeMenu}>Login</Link>
+                    </Button>
+                    <Button asChild variant="secondary" className="min-h-11">
+                      <Link href="/register" onClick={closeMenu}>Register</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </nav>
+      <div className="head-rule" />
     </header>
   );
 }

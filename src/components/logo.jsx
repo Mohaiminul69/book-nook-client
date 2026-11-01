@@ -1,15 +1,24 @@
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
 
-export function Logo({ className = "" }) {
+// 30×30 ink square with an italic "B", then "Book*Nook*"
+export function BrandWordmark({ className = "", ...props }) {
   return (
-    <Link href="/" className={`flex items-center gap-2.5 ${className}`}>
-      <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-highlight dark:bg-highlight dark:text-highlight-foreground">
-        <BookOpen className="size-5" />
+    <span {...props} className={`text-[22px] font-semibold tracking-[-0.01em] ${className}`}>
+      Book<span className="italic">Nook</span>
+    </span>
+  );
+}
+
+export function Logo({ className = "", onClick }) {
+  return (
+    <Link href="/" onClick={onClick} className={`flex items-center gap-2.5 text-foreground ${className}`}>
+      <span
+        aria-hidden="true"
+        className="grid size-[30px] place-items-center rounded-sm bg-foreground font-heading text-[19px] text-background italic"
+      >
+        B
       </span>
-      <span className="font-heading text-2xl font-bold tracking-tight text-primary">
-        BookNook
-      </span>
+      <BrandWordmark />
     </Link>
   );
 }
