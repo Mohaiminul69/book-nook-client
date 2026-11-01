@@ -4,14 +4,53 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Broadsheet ramps (design_handoff_booknook/README.md → Design Tokens).
+   cyan = "accent", magenta = "accent-2" in the handoff. */
+@theme {
+  --color-neutral-100: #f8f4f4;
+  --color-neutral-200: #eae7e7;
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
+  --color-neutral-800: #444141;
+  --color-neutral-900: #2d2b2b;
+
+  --color-cyan: #0088b0;
+  --color-cyan-100: #e9f8ff;
+  --color-cyan-200: #cbeeff;
+  --color-cyan-300: #99e0ff;
+  --color-cyan-400: #62c5ee;
+  --color-cyan-500: #38a6cf;
+  --color-cyan-600: #1186ac;
+  --color-cyan-700: #006786;
+  --color-cyan-800: #004961;
+  --color-cyan-900: #0a303e;
+
+  --color-magenta: #d6006c;
+  --color-magenta-100: #fff1f4;
+  --color-magenta-200: #ffdee6;
+  --color-magenta-300: #ffc0d0;
+  --color-magenta-400: #ff90b1;
+  --color-magenta-500: #ff458e;
+  --color-magenta-600: #d82071;
+  --color-magenta-700: #aa0b56;
+  --color-magenta-800: #790e3d;
+  --color-magenta-900: #4b1528;
+
+  --shadow-sm: 0 1px 2px rgb(45 43 43 / 0.14);
+  --shadow-md: 0 3px 10px rgb(45 43 43 / 0.16);
+  --shadow-lg: 0 12px 32px rgb(45 43 43 / 0.22);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-outfit);
-  --color-highlight: var(--highlight);
-  --color-highlight-foreground: var(--highlight-foreground);
+  /* Source Serif 4 everywhere — the design has no sans-serif */
+  --font-sans: var(--font-source-serif);
+  --font-serif: var(--font-source-serif);
+  --font-heading: var(--font-source-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -41,103 +80,101 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-sm: 1px;
+  --radius-md: var(--radius);
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
+  --radius-4xl: 4px;
 }
 
-/* BookNook palette: navy ink + amber highlight on warm paper */
+/* shadcn variables mapped to Broadsheet (handoff → "shadcn / Tailwind mapping") */
 :root {
-  --background: #f7f6f3;
-  --foreground: #18181b;
-  --card: #ffffff;
-  --card-foreground: #18181b;
-  --popover: #ffffff;
-  --popover-foreground: #18181b;
-  --primary: #1e2a4a;
-  --primary-foreground: #ffffff;
-  --secondary: #eef1f8;
-  --secondary-foreground: #1e2a4a;
-  --muted: #f1f0ec;
-  --muted-foreground: #52525b;
-  --accent: #eef1f8;
-  --accent-foreground: #1e2a4a;
-  --highlight: #f2a93b;
-  --highlight-foreground: #1e2a4a;
-  --destructive: #b42318;
-  --border: #e4e4e7;
-  --input: #d4d4d8;
-  --ring: #1e2a4a;
-  --chart-1: #1e2a4a;
-  --chart-2: #f2a93b;
-  --chart-3: #3d5a3a;
-  --chart-4: #7a4e2d;
-  --chart-5: #6b3e5e;
-  --radius: 0.625rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #18181b;
-  --sidebar-primary: #1e2a4a;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #eef1f8;
-  --sidebar-accent-foreground: #1e2a4a;
-  --sidebar-border: #e4e4e7;
-  --sidebar-ring: #1e2a4a;
+  --background: #f3f2f2;
+  --foreground: #201e1d;
+  --card: #eae9e9;
+  --card-foreground: #201e1d;
+  --popover: #eae9e9;
+  --popover-foreground: #201e1d;
+  --primary: #0088b0;
+  --primary-foreground: #f3f2f2;
+  --secondary: transparent;
+  --secondary-foreground: #201e1d;
+  --muted: #eae9e9;
+  --muted-foreground: color-mix(in srgb, #201e1d 72%, transparent);
+  --accent: color-mix(in srgb, #201e1d 7%, transparent);
+  --accent-foreground: #201e1d;
+  --destructive: #aa0b56;
+  --border: color-mix(in srgb, #201e1d 16%, transparent);
+  --input: color-mix(in srgb, #201e1d 16%, transparent);
+  --ring: #0088b0;
+  --chart-1: #0088b0;
+  --chart-2: #d6006c;
+  --chart-3: #605d5d;
+  --chart-4: #38a6cf;
+  --chart-5: #ff458e;
+  --radius: 2px;
+  --sidebar: #eae9e9;
+  --sidebar-foreground: #201e1d;
+  --sidebar-primary: #0088b0;
+  --sidebar-primary-foreground: #f3f2f2;
+  --sidebar-accent: color-mix(in srgb, #201e1d 7%, transparent);
+  --sidebar-accent-foreground: #201e1d;
+  --sidebar-border: color-mix(in srgb, #201e1d 16%, transparent);
+  --sidebar-ring: #0088b0;
 }
 
-.dark {
-  --background: #0f1424;
-  --foreground: #eceef3;
-  --card: #161d33;
-  --card-foreground: #eceef3;
-  --popover: #161d33;
-  --popover-foreground: #eceef3;
-  --primary: #e8ecf6;
-  --primary-foreground: #1e2a4a;
-  --secondary: #222b45;
-  --secondary-foreground: #eceef3;
-  --muted: #1b2238;
-  --muted-foreground: #a6aec2;
-  --accent: #222b45;
-  --accent-foreground: #eceef3;
-  --highlight: #f2a93b;
-  --highlight-foreground: #1e2a4a;
-  --destructive: #f97066;
-  --border: rgb(255 255 255 / 10%);
-  --input: rgb(255 255 255 / 15%);
-  --ring: #a6aec2;
-  --chart-1: #e8ecf6;
-  --chart-2: #f2a93b;
-  --chart-3: #7fa67a;
-  --chart-4: #c08a5e;
-  --chart-5: #b07fa1;
-  --sidebar: #161d33;
-  --sidebar-foreground: #eceef3;
-  --sidebar-primary: #f2a93b;
-  --sidebar-primary-foreground: #1e2a4a;
-  --sidebar-accent: #222b45;
-  --sidebar-accent-foreground: #eceef3;
-  --sidebar-border: rgb(255 255 255 / 10%);
-  --sidebar-ring: #a6aec2;
+/* Page container: 1200px max, padding clamp(20px, 5vw, 64px) */
+@utility page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 64px);
+}
+
+/* Thick-thin head rule under the navbar and above the footer */
+@utility head-rule {
+  height: 5px;
+  border-top: 2px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
+}
+
+/* Small uppercase label that sits above headings */
+@utility kicker {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  button:not(:disabled), [role="button"]:not(:disabled) {
-    cursor: pointer;
+    @apply border-border;
   }
   html {
     @apply font-sans;
   }
-  h1, h2, h3 {
-    @apply font-heading;
+  body {
+    @apply bg-background text-foreground;
+    font-size: 15px;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading font-semibold;
+  }
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: color-mix(in srgb, #0088b0 30%, transparent);
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
