@@ -1,19 +1,16 @@
 import { Suspense } from "react";
-import { HeroSlider } from "@/components/home/hero-slider";
+import { HeroSlider, HeroSliderFallback } from "@/components/home/hero-slider";
 
+// The layout's "BookNook | %s" template only applies to nested routes, not this page
 export const metadata = {
-  title: "Home",
+  title: { absolute: "BookNook | Home" },
 };
 
 export default function Home() {
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6">
+    <section className="page-container">
       {/* Swiper reads the clock while rendering, so it streams in under Suspense */}
-      <Suspense
-        fallback={
-          <div className="min-h-[440px] rounded-3xl bg-[#1e2a4a] md:min-h-[460px] dark:bg-[#161d33]" />
-        }
-      >
+      <Suspense fallback={<HeroSliderFallback />}>
         <HeroSlider />
       </Suspense>
     </section>

@@ -1,104 +1,149 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { A11y, Autoplay, Navigation, Pagination } from "swiper/modules";
+import { A11y, Autoplay, EffectFade, Keyboard } from "swiper/modules";
+import { BookCover } from "@/components/book-cover";
 import { Button } from "@/components/ui/button";
 
 import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 
 const SLIDES = [
   {
-    eyebrow: "Welcome to BookNook",
-    title: "Your next favourite book is already on the shelf",
-    text: "Browse books shared by readers in your community and borrow one in a single click.",
-    covers: ["#7a4e2d", "#f2a93b", "#3d5a3a"],
-    featured: "The Midnight Library",
+    title: "A library the size of a street corner",
+    text: "Borrow a book for a week, bring it back, pick another. Every title here was added by someone nearby.",
+    covers: [
+      { title: "The Remains of the Day", author: "Kazuo Ishiguro", category: "Fiction" },
+      { title: "Pachinko", author: "Min Jin Lee", category: "Fiction" },
+      { title: "Piranesi", author: "Susanna Clarke", category: "Fiction" },
+    ],
   },
   {
-    eyebrow: "Free to borrow",
-    title: "Borrow for a few days, return when you are done",
-    text: "Pick a book, choose a return date and confirm. No fees and no paperwork.",
-    covers: ["#34506e", "#f2a93b", "#6b3e5e"],
-    featured: "Project Hail Mary",
+    title: "Every reader adds a shelf",
+    text: "List the books you own and how many copies you can lend. Neighbours borrow them, and they come back.",
+    covers: [
+      { title: "A Brief History of Time", author: "Stephen Hawking", category: "Science" },
+      { title: "The Gene", author: "Siddhartha Mukherjee", category: "Science" },
+      { title: "Cosmos", author: "Carl Sagan", category: "Science" },
+    ],
   },
   {
-    eyebrow: "Share your shelf",
-    title: "Add the books you love for others to read",
-    text: "Upload a cover, write a short note and your book is ready for the next reader.",
-    covers: ["#2f4858", "#f2a93b", "#8a5a1e"],
-    featured: "Atomic Habits",
+    title: "Return dates you won't forget",
+    text: "My Borrows keeps every loan and its return date in one table. One click puts the copy back on the shelf.",
+    covers: [
+      { title: "The Gruffalo", author: "Julia Donaldson", category: "Kids" },
+      { title: "Matilda", author: "Roald Dahl", category: "Kids" },
+      { title: "SPQR", author: "Mary Beard", category: "History" },
+    ],
   },
 ];
 
-function CoverStack({ covers, featured }) {
-  const [left, middle, right] = covers;
+// Cover positions on the 440px stage: (0,70), (150,0), (300,100)
+const COVER_POSITIONS = ["left-0 top-[70px]", "left-[150px] top-0", "left-[300px] top-[100px]"];
+
+function SlideCopy({ slide }) {
   return (
-    <div className="relative hidden h-72 w-96 shrink-0 md:block" aria-hidden="true">
-      <div
-        className="absolute top-10 left-5 h-56 w-36 -rotate-8 rounded-lg shadow-2xl"
-        style={{ background: left }}
-      />
-      <div
-        className="absolute top-2 left-28 flex h-60 w-40 items-end rounded-lg p-4 shadow-2xl"
-        style={{ background: middle }}
-      >
-        <span className="font-heading text-xl leading-tight font-bold text-primary">
-          {featured}
-        </span>
-      </div>
-      <div
-        className="absolute top-12 left-56 h-56 w-36 rotate-7 rounded-lg shadow-2xl"
-        style={{ background: right }}
-      />
+    <div className="flex flex-col gap-6">
+      <h1 className="max-w-[13ch] text-[42px] leading-[1.04] tracking-[-0.025em] lg:text-[76px]">
+        {slide.title}
+        <span className="text-magenta">.</span>
+      </h1>
+      <p className="max-w-[42ch] text-base leading-[1.6] lg:text-lg">{slide.text}</p>
     </div>
   );
 }
 
-export function HeroSlider() {
+function HeroLayout({ active, copy, onPrev, onNext, onDot }) {
+  const slide = SLIDES[active];
   return (
-    <Swiper
-      modules={[Autoplay, Navigation, Pagination, A11y]}
-      loop
-      speed={700}
-      autoplay={{ delay: 5000, pauseOnMouseEnter: true, disableOnInteraction: false }}
-      pagination={{ clickable: true }}
-      navigation
-      className="hero-slider overflow-hidden rounded-3xl bg-[#1e2a4a] dark:bg-[#161d33]"
-      style={{
-        "--swiper-pagination-color": "#f2a93b",
-        "--swiper-pagination-bullet-inactive-color": "#ffffff",
-        "--swiper-pagination-bullet-inactive-opacity": "0.4",
-        "--swiper-navigation-color": "#ffffff",
-        "--swiper-navigation-size": "22px",
-      }}
-    >
-      {SLIDES.map((slide) => (
-        <SwiperSlide key={slide.title}>
-          <div className="flex min-h-[440px] items-center gap-10 px-6 pt-12 pb-16 sm:px-16 md:min-h-[460px]">
-            <div className="flex max-w-xl flex-1 flex-col items-start gap-5">
-              <span className="rounded-full bg-highlight/20 px-3 py-1.5 text-xs font-semibold tracking-wider text-[#f7c873] uppercase">
-                {slide.eyebrow}
-              </span>
-              <h1 className="text-4xl leading-[1.08] font-bold text-white sm:text-5xl">
-                {slide.title}
-              </h1>
-              <p className="max-w-md text-base leading-relaxed text-[#d4dae8] sm:text-lg">
-                {slide.text}
-              </p>
-              <Button asChild variant="highlight" size="lg" className="h-12 px-6 text-base font-semibold">
-                <Link href="/books">
-                  Browse Books <ArrowRight />
-                </Link>
-              </Button>
+    <div className="grid items-center gap-12 pt-9 lg:min-h-[520px] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:pt-14">
+      <div className="flex min-w-0 flex-col gap-6">
+        <span className="kicker tabular-nums" aria-live="polite">
+          0{active + 1} / 0{SLIDES.length}
+        </span>
+        {copy}
+        <div className="flex flex-wrap items-center gap-5 pt-2">
+          <Button asChild size="lg">
+            <Link href="/books">Browse Books</Link>
+          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" size="icon-lg" aria-label="Previous slide" onClick={onPrev}>
+              ←
+            </Button>
+            <Button variant="secondary" size="icon-lg" aria-label="Next slide" onClick={onNext}>
+              →
+            </Button>
+            <div className="flex gap-1.5 pl-2">
+              {SLIDES.map((s, i) => (
+                <button
+                  key={s.title}
+                  type="button"
+                  aria-label={`Slide ${i + 1}`}
+                  aria-current={i === active ? "true" : undefined}
+                  onClick={() => onDot?.(i)}
+                  className={`h-1.5 rounded-[3px] transition-[width] duration-250 ${
+                    i === active ? "w-[26px] bg-cyan" : "w-1.5 bg-neutral-300"
+                  }`}
+                />
+              ))}
             </div>
-            <CoverStack covers={slide.covers} featured={slide.featured} />
           </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
+        </div>
+      </div>
+
+      <div className="relative hidden h-[440px] lg:block" aria-hidden="true">
+        {slide.covers.map((cover, i) => (
+          <div
+            key={`${active}-${cover.title}`}
+            className={`absolute w-[230px] rounded-sm shadow-lg animate-in duration-500 fade-in ${COVER_POSITIONS[i]}`}
+          >
+            <BookCover {...cover} titleClassName="text-[24px]" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Static first slide: the Suspense fallback while Swiper streams in
+export function HeroSliderFallback() {
+  return <HeroLayout active={0} copy={<SlideCopy slide={SLIDES[0]} />} />;
+}
+
+export function HeroSlider() {
+  const swiperRef = useRef(null);
+  const [active, setActive] = useState(0);
+
+  return (
+    <HeroLayout
+      active={active}
+      onPrev={() => swiperRef.current?.slidePrev()}
+      onNext={() => swiperRef.current?.slideNext()}
+      onDot={(i) => swiperRef.current?.slideToLoop(i)}
+      copy={
+        <Swiper
+          modules={[EffectFade, Autoplay, Keyboard, A11y]}
+          effect="fade"
+          fadeEffect={{ crossFade: true }}
+          loop
+          speed={500}
+          autoplay={{ delay: 6000, pauseOnMouseEnter: true, disableOnInteraction: false }}
+          keyboard={{ enabled: true }}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          onSlideChange={(swiper) => setActive(swiper.realIndex)}
+          className="w-full"
+        >
+          {SLIDES.map((slide) => (
+            <SwiperSlide key={slide.title} className="bg-background">
+              <SlideCopy slide={slide} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      }
+    />
   );
 }
