@@ -34,7 +34,8 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
       className={`${inter.variable} ${outfit.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      {/* Extensions like Grammarly add attributes to <body> before hydration */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <Navbar />
           <main className="flex-1">{children}</main>
