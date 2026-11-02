@@ -29,12 +29,12 @@ const NAV_LINKS = [
   { href: "/my-borrows", label: "My Borrows", private: true },
 ];
 
-function isActive(pathname, href) {
+const isActive = (pathname, href) => {
   if (!pathname) return false;
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
-}
+};
 
-function DesktopLinkList({ links, pathname }) {
+const DesktopLinkList = ({ links, pathname }) => {
   return links.map((link) => {
     const active = isActive(pathname, link.href);
     return (
@@ -48,9 +48,9 @@ function DesktopLinkList({ links, pathname }) {
       </Link>
     );
   });
-}
+};
 
-function DrawerLinkList({ links, pathname, onNavigate }) {
+const DrawerLinkList = ({ links, pathname, onNavigate }) => {
   return links.map((link) => {
     const active = isActive(pathname, link.href);
     return (
@@ -65,32 +65,31 @@ function DrawerLinkList({ links, pathname, onNavigate }) {
       </Link>
     );
   });
-}
+};
 
-// usePathname must sit inside <Suspense> because cacheComponents is on
-function WithPathname({ render }) {
+const WithPathname = ({ render }) => {
   const pathname = usePathname();
   return render(pathname);
-}
+};
 
-function ActiveLinks({ render }) {
+const ActiveLinks = ({ render }) => {
   return (
     <Suspense fallback={render(null)}>
       <WithPathname render={render} />
     </Suspense>
   );
-}
+};
 
-function initialsOf(name = "") {
+const initialsOf = (name = "") => {
   return name
     .split(" ")
     .map((part) => part[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
-}
+};
 
-function AccountMenu({ user, onLogout }) {
+const AccountMenu = ({ user, onLogout }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -114,9 +113,14 @@ function AccountMenu({ user, onLogout }) {
       >
         <div className="flex flex-col gap-0.5 px-3 pt-2.5 pb-3">
           <span className="font-heading text-[17px]">{user.name}</span>
-          <span className="text-[13px] text-muted-foreground">{user.email}</span>
+          <span className="text-[13px] text-muted-foreground">
+            {user.email}
+          </span>
         </div>
-        <DropdownMenuItem asChild className="min-h-10 rounded-md px-3 font-heading text-sm font-semibold">
+        <DropdownMenuItem
+          asChild
+          className="min-h-10 rounded-md px-3 font-heading text-sm font-semibold"
+        >
           <Link href="/profile">My Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem
@@ -128,9 +132,9 @@ function AccountMenu({ user, onLogout }) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
 
-function HamburgerIcon() {
+const HamburgerIcon = () => {
   return (
     <span aria-hidden="true" className="flex flex-col gap-1">
       <span className="h-[1.5px] w-4 bg-current" />
@@ -138,11 +142,9 @@ function HamburgerIcon() {
       <span className="h-[1.5px] w-4 bg-current" />
     </span>
   );
-}
+};
 
-export function Navbar() {
-  // Placeholder until BetterAuth is wired in the auth step:
-  // this becomes the logged-in user from the session, and onLogout calls signOut.
+export const Navbar = () => {
   const user = null;
   const onLogout = () => {};
 
@@ -156,7 +158,11 @@ export function Navbar() {
         <Logo className="mr-auto" />
 
         <div className="hidden items-center gap-7 lg:flex">
-          <ActiveLinks render={(pathname) => <DesktopLinkList links={links} pathname={pathname} />} />
+          <ActiveLinks
+            render={(pathname) => (
+              <DesktopLinkList links={links} pathname={pathname} />
+            )}
+          />
         </div>
 
         <div className="flex items-center gap-2.5">
@@ -180,7 +186,12 @@ export function Navbar() {
 
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="secondary" size="icon-lg" className="lg:hidden" aria-label="Open menu">
+              <Button
+                variant="secondary"
+                size="icon-lg"
+                className="lg:hidden"
+                aria-label="Open menu"
+              >
                 <HamburgerIcon />
               </Button>
             </SheetTrigger>
@@ -194,23 +205,36 @@ export function Navbar() {
                   <BrandWordmark className="text-foreground" />
                 </SheetTitle>
                 <SheetClose asChild>
-                  <Button variant="ghost" size="icon-lg" className="text-xl font-normal text-foreground" aria-label="Close menu">
+                  <Button
+                    variant="ghost"
+                    size="icon-lg"
+                    className="text-xl font-normal text-foreground"
+                    aria-label="Close menu"
+                  >
                     ×
                   </Button>
                 </SheetClose>
               </div>
-              <SheetDescription className="sr-only">Site navigation</SheetDescription>
+              <SheetDescription className="sr-only">
+                Site navigation
+              </SheetDescription>
 
               <ActiveLinks
                 render={(pathname) => (
-                  <DrawerLinkList links={links} pathname={pathname} onNavigate={closeMenu} />
+                  <DrawerLinkList
+                    links={links}
+                    pathname={pathname}
+                    onNavigate={closeMenu}
+                  />
                 )}
               />
 
               <div className="mt-auto flex flex-col gap-2.5">
                 {user ? (
                   <>
-                    <span className="text-sm text-foreground/75">Signed in as {user.name}</span>
+                    <span className="text-sm text-foreground/75">
+                      Signed in as {user.name}
+                    </span>
                     <Button
                       variant="secondary"
                       className="min-h-11"
@@ -225,10 +249,14 @@ export function Navbar() {
                 ) : (
                   <>
                     <Button asChild className="min-h-11">
-                      <Link href="/login" onClick={closeMenu}>Login</Link>
+                      <Link href="/login" onClick={closeMenu}>
+                        Login
+                      </Link>
                     </Button>
                     <Button asChild variant="secondary" className="min-h-11">
-                      <Link href="/register" onClick={closeMenu}>Register</Link>
+                      <Link href="/register" onClick={closeMenu}>
+                        Register
+                      </Link>
                     </Button>
                   </>
                 )}
@@ -240,4 +268,4 @@ export function Navbar() {
       <div className="head-rule" />
     </header>
   );
-}
+};

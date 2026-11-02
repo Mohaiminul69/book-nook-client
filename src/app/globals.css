@@ -4,8 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Broadsheet ramps (design_handoff_booknook/README.md → Design Tokens).
-   cyan = "accent", magenta = "accent-2" in the handoff. */
 @theme {
   --color-neutral-100: #f8f4f4;
   --color-neutral-200: #eae7e7;
@@ -47,7 +45,6 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Source Serif 4 everywhere — the design has no sans-serif */
   --font-sans: var(--font-source-serif);
   --font-serif: var(--font-source-serif);
   --font-heading: var(--font-source-serif);
@@ -89,7 +86,6 @@
   --radius-4xl: 4px;
 }
 
-/* shadcn variables mapped to Broadsheet (handoff → "shadcn / Tailwind mapping") */
 :root {
   --background: #f3f2f2;
   --foreground: #201e1d;
@@ -125,7 +121,6 @@
   --sidebar-ring: #0088b0;
 }
 
-/* Page container: 1200px max, padding clamp(20px, 5vw, 64px) */
 @utility page-container {
   width: 100%;
   max-width: 1200px;
@@ -133,14 +128,12 @@
   padding-inline: clamp(20px, 5vw, 64px);
 }
 
-/* Thick-thin head rule under the navbar and above the footer */
 @utility head-rule {
   height: 5px;
   border-top: 2px solid var(--foreground);
   border-bottom: 1px solid var(--foreground);
 }
 
-/* Small uppercase label that sits above headings */
 @utility kicker {
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -161,7 +154,10 @@
     line-height: 1.55;
     text-wrap: pretty;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     @apply font-heading font-semibold;
   }
   :focus {
@@ -174,7 +170,8 @@
   ::selection {
     background: color-mix(in srgb, #0088b0 30%, transparent);
   }
-  button:not(:disabled), [role="button"]:not(:disabled) {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
 }
