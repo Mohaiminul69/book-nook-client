@@ -19,7 +19,10 @@ export const apiFetch = async (path, options = {}) => {
   });
   const data = await res.json().catch(() => null);
   if (!res.ok) {
-    throw new Error(data?.message || "Something went wrong");
+    const error = new Error(data?.message || "Something went wrong");
+    error.status = res.status;
+    error.code = data?.code;
+    throw error;
   }
   return data;
 };

@@ -1,6 +1,6 @@
 import { BookCover } from "@/components/book-cover";
+import { BorrowButton } from "@/components/books/borrow-button";
 import { Tag } from "@/components/tag";
-import { Button } from "@/components/ui/button";
 
 const formatDate = (value) => {
   return new Date(value).toLocaleDateString("en-GB", {
@@ -26,7 +26,7 @@ const Fact = ({ label, children }) => {
   );
 };
 
-export const BookDetails = ({ book }) => {
+export const BookDetails = ({ book, user, myBorrow }) => {
   const isOut = book.availableCopies <= 0;
 
   return (
@@ -68,16 +68,15 @@ export const BookDetails = ({ book }) => {
           </Fact>
         </div>
 
+        {myBorrow && (
+          <span className="text-[15px] text-cyan-700">
+            You&apos;re reading this one. Return by{" "}
+            {formatDate(myBorrow.returnDate)}.
+          </span>
+        )}
+
         <div className="flex flex-wrap gap-3">
-          {isOut ? (
-            <Button disabled className="min-h-12 px-7 text-[15px]">
-              Not Available
-            </Button>
-          ) : (
-            <Button className="min-h-12 px-7 text-[15px]">
-              Borrow This Book
-            </Button>
-          )}
+          <BorrowButton book={book} user={user} />
         </div>
       </div>
     </div>

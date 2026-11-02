@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { BookDetails } from "@/components/books/book-details";
 import { LoadingState } from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
-import { getBookById } from "@/lib/server-api";
+import { getBookById, getMyBorrows, getSession } from "@/lib/server-api";
 
 export const generateMetadata = async ({ params }) => {
   const { id } = await params;
@@ -31,7 +31,17 @@ const BookDetailsData = async ({ params }) => {
     notFound();
   }
 
-  return <BookDetails book={book} />;
+  const [session, borrows] = await Promise.all([
+    getSession(),
+    getMyBorrows().catch(() => []),
+  ]);
+  const myBorrow = borrows.find((borrow) => borrow.bookId === book._id);
+  const user = {
+    name: session?.user.name || "",
+    email: session?.user.email || "",
+  };
+
+  return <BookDetails book={book} user={user} myBorrow={myBorrow} />;
 };
 
 const BookDetailsPage = ({ params }) => {
