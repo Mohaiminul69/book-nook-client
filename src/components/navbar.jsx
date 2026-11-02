@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { initialsOf } from "@/lib/utils";
 import { notify } from "@/components/toast";
 import { BrandWordmark, Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -80,15 +81,6 @@ const ActiveLinks = ({ render }) => {
       <WithPathname render={render} />
     </Suspense>
   );
-};
-
-const initialsOf = (name = "") => {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 };
 
 const AccountMenu = ({ user, onLogout }) => {
