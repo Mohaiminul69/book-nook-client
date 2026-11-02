@@ -21,18 +21,20 @@ const ReturnButton = ({ borrow, onReturn, returning, className = "" }) => {
   );
 };
 
-export const MyBorrowsList = ({ initialBorrows }) => {
+export const MyBorrowsList = ({ borrows: serverBorrows }) => {
   const router = useRouter();
-  const [borrows, setBorrows] = useState(initialBorrows);
+  const [returnedIds, setReturnedIds] = useState([]);
   const [returningId, setReturningId] = useState(null);
+
+  const borrows = serverBorrows.filter(
+    (borrow) => !returnedIds.includes(borrow._id),
+  );
 
   const handleReturn = async (borrow) => {
     setReturningId(borrow._id);
     try {
       await apiFetch(`/borrows/${borrow._id}`, { method: "DELETE" });
-      setBorrows((current) =>
-        current.filter((item) => item._id !== borrow._id),
-      );
+      setReturnedIds((current) => [...current, borrow._id]);
       notify.success(
         "Book returned",
         `“${borrow.bookTitle}” is back on the shelf.`,

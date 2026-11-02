@@ -53,7 +53,7 @@ const MyBorrowsData = async () => {
     ...getStatus(borrow.returnDate),
   }));
 
-  return <MyBorrowsList initialBorrows={rows} />;
+  return <MyBorrowsList borrows={rows} />;
 };
 
 const MyBorrowsPage = () => {
