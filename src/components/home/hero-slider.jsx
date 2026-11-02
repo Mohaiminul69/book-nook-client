@@ -19,9 +19,20 @@ const SLIDES = [
         title: "The Remains of the Day",
         author: "Kazuo Ishiguro",
         category: "Fiction",
+        image: "https://covers.openlibrary.org/b/id/95742-L.jpg",
       },
-      { title: "Pachinko", author: "Min Jin Lee", category: "Fiction" },
-      { title: "Piranesi", author: "Susanna Clarke", category: "Fiction" },
+      {
+        title: "Pride and Prejudice",
+        author: "Jane Austen",
+        category: "Fiction",
+        image: "https://covers.openlibrary.org/b/isbn/9780679783268-L.jpg",
+      },
+      {
+        title: "The Hobbit",
+        author: "J. R. R. Tolkien",
+        category: "Fiction",
+        image: "https://covers.openlibrary.org/b/id/14627509-L.jpg",
+      },
     ],
   },
   {
@@ -32,22 +43,44 @@ const SLIDES = [
         title: "A Brief History of Time",
         author: "Stephen Hawking",
         category: "Science",
+        image: "https://covers.openlibrary.org/b/isbn/9780553380163-L.jpg",
       },
       {
-        title: "The Gene",
-        author: "Siddhartha Mukherjee",
+        title: "Cosmos",
+        author: "Carl Sagan",
         category: "Science",
+        image: "https://covers.openlibrary.org/b/id/8283901-L.jpg",
       },
-      { title: "Cosmos", author: "Carl Sagan", category: "Science" },
+      {
+        title: "Sapiens: A Brief History of Humankind",
+        author: "Yuval Noah Harari",
+        category: "History",
+        image: "https://covers.openlibrary.org/b/isbn/9780062316097-L.jpg",
+      },
     ],
   },
   {
     title: "Return dates you won't forget",
     text: "My Borrows keeps every loan and its return date in one table. One click puts the copy back on the shelf.",
     covers: [
-      { title: "The Gruffalo", author: "Julia Donaldson", category: "Kids" },
-      { title: "Matilda", author: "Roald Dahl", category: "Kids" },
-      { title: "SPQR", author: "Mary Beard", category: "History" },
+      {
+        title: "Charlotte's Web",
+        author: "E. B. White",
+        category: "Kids",
+        image: "https://covers.openlibrary.org/b/isbn/9780064400558-L.jpg",
+      },
+      {
+        title: "Matilda",
+        author: "Roald Dahl",
+        category: "Kids",
+        image: "https://covers.openlibrary.org/b/isbn/9780142410370-L.jpg",
+      },
+      {
+        title: "Atomic Habits",
+        author: "James Clear",
+        category: "Others",
+        image: "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg",
+      },
     ],
   },
 ];
@@ -125,7 +158,7 @@ const HeroLayout = ({ active, copy, onPrev, onNext, onDot }) => {
         {slide.covers.map((cover, i) => (
           <div
             key={`${active}-${cover.title}`}
-            className={`absolute w-[230px] rounded-sm shadow-lg animate-in duration-500 fade-in ${COVER_POSITIONS[i]}`}
+            className={`absolute w-[230px] rounded-sm shadow-[0_18px_40px_rgb(45_43_43/0.32),0_2px_6px_rgb(45_43_43/0.18)] animate-in duration-500 fade-in ${COVER_POSITIONS[i]}`}
           >
             <BookCover {...cover} titleClassName="text-[24px]" />
           </div>
