@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { HeroSlider, HeroSliderFallback } from "@/components/home/hero-slider";
+import { NewArrivals } from "@/components/home/new-arrivals";
 
 export const metadata = {
   title: { absolute: "BookNook | Home" },
@@ -7,11 +8,12 @@ export const metadata = {
 
 const Home = () => {
   return (
-    <section className="page-container">
+    <div className="page-container flex flex-col gap-18 lg:gap-32">
       <Suspense fallback={<HeroSliderFallback />}>
         <HeroSlider />
       </Suspense>
-    </section>
+      <NewArrivals />
+    </div>
   );
 };
 

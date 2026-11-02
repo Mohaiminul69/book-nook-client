@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const COVER_COLORS = {
   Fiction: "bg-magenta-200 text-magenta-900",
@@ -14,6 +15,7 @@ export const BookCover = ({
   category,
   image,
   className = "",
+  typeClassName = "",
   titleClassName = "text-[26px]",
 }) => {
   if (image) {
@@ -24,16 +26,22 @@ export const BookCover = ({
         width={600}
         height={800}
         unoptimized
-        className={`aspect-[3/4] w-full rounded-sm object-cover ${className}`}
+        className={cn(
+          "aspect-[3/4] w-full rounded-sm bg-neutral-200 object-cover",
+          className,
+        )}
       />
     );
   }
 
   return (
     <div
-      className={`flex aspect-[3/4] w-full flex-col justify-between rounded-sm px-[18px] py-5 shadow-[inset_7px_0_0_color-mix(in_srgb,currentColor_14%,transparent)] ${
-        COVER_COLORS[category] || COVER_COLORS.Others
-      } ${className}`}
+      className={cn(
+        "flex aspect-[3/4] w-full flex-col justify-between rounded-sm px-[18px] py-5 shadow-[inset_7px_0_0_color-mix(in_srgb,currentColor_14%,transparent)]",
+        COVER_COLORS[category] || COVER_COLORS.Others,
+        className,
+        typeClassName,
+      )}
     >
       <span className="pl-1.5 text-[10px] tracking-[0.14em] uppercase">
         {category}
@@ -41,7 +49,10 @@ export const BookCover = ({
       <div className="flex flex-col gap-1.5 pl-1.5">
         <span className="h-[3px] w-9 border-t-[1.5px] border-b-[0.5px] border-current" />
         <span
-          className={`font-heading leading-[1.08] tracking-[-0.01em] ${titleClassName}`}
+          className={cn(
+            "font-heading leading-[1.08] tracking-[-0.01em]",
+            titleClassName,
+          )}
         >
           {title}
         </span>
