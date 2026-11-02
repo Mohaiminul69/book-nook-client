@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-const COVER_COLORS = {
+export const COVER_COLORS = {
   Fiction: "bg-magenta-200 text-magenta-900",
   Science: "bg-cyan-200 text-cyan-900",
   History: "bg-neutral-300 text-neutral-900",
