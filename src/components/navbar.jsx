@@ -2,7 +2,9 @@
 
 import { Suspense, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { notify } from "@/components/toast";
 import { BrandWordmark, Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -145,8 +147,16 @@ const HamburgerIcon = () => {
 };
 
 export const Navbar = () => {
-  const user = null;
-  const onLogout = () => {};
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
+
+  const onLogout = async () => {
+    await authClient.signOut();
+    notify.success("Logged out", "See you next time.");
+    router.push("/");
+    router.refresh();
+  };
 
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
@@ -168,7 +178,7 @@ export const Navbar = () => {
         <div className="flex items-center gap-2.5">
           {user && <AccountMenu user={user} onLogout={onLogout} />}
 
-          {!user && (
+          {!user && !isPending && (
             <>
               <div className="hidden items-center gap-2.5 lg:flex">
                 <Button asChild variant="ghost" className="px-[5px]">

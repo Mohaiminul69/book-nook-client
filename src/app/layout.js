@@ -1,6 +1,7 @@
 import { Source_Serif_4 } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
+import { Toaster } from "@/components/toast";
 import "./globals.css";
 
 const sourceSerif = Source_Serif_4({
@@ -26,6 +27,7 @@ const RootLayout = ({ children }) => {
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );
